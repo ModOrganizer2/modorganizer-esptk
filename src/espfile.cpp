@@ -1,5 +1,6 @@
 #include "espfile.h"
 #include "subrecord.h"
+#include "espexceptions.h"
 #include <sstream>
 
 
@@ -30,14 +31,14 @@ public:
 void ESP::File::init()
 {
   if (!m_File.is_open()) {
-    throw std::runtime_error("file not found");
+    throw ESP::InvalidFileException("file not found");
   }
   m_File.exceptions(std::ios_base::badbit);
 
   uint8_t type[4];
   m_File.read(reinterpret_cast<char*>(type), 4);
   if (memcmp(type, "TES4", 4) != 0) {
-    throw std::runtime_error("invalid file type");
+    throw ESP::InvalidFileException("invalid file type");
   }
   m_File.seekg(0);
 

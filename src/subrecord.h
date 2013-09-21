@@ -29,7 +29,7 @@ public:
 public:
   SubRecord();
 
-  void readFrom(std::istream &stream);
+  bool readFrom(std::istream &stream);
 
   EType type() const { return m_Type; }
   const std::vector<uint8_t> &data() const { return m_Data; }

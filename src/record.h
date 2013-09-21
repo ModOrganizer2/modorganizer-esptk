@@ -22,7 +22,7 @@ public:
 public:
   Record();
 
-  void readFrom(std::istream &stream);
+  bool readFrom(std::istream &stream);
 
   bool flagSet(EFlag flag) const;
 

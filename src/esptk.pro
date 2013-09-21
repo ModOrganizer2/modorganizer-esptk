@@ -17,7 +17,8 @@ SOURCES += espfile.cpp \
 HEADERS += espfile.h \
     record.h \
     subrecord.h \
-    esptypes.h
+    esptypes.h \
+    espexceptions.h
 unix:!symbian {
     maemo5 {
         target.path = /opt/usr/lib
