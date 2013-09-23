@@ -27,6 +27,9 @@ bool ESP::SubRecord::readFrom(std::istream &stream)
       throw ESP::InvalidRecordException("sub-record incomplete");
     }
   }
+  if (stream.gcount() != 4) {
+    throw ESP::InvalidRecordException("sub-record type incomplete");
+  }
   typeString[4] = '\0'; // not sure if this is required, shouldn't be
   auto iter = s_TypeMap.find(std::string(typeString));
   if (iter != s_TypeMap.end()) {

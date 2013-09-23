@@ -21,6 +21,14 @@ bool ESP::Record::readFrom(std::istream &stream)
       throw ESP::InvalidRecordException("record incomplete");
     }
   }
+
+  char buf[4];
+  stream.read(buf, 4);
+  if (memcmp(buf, "HEDR", 4) == 0) {
+    m_OblivionStyle = true;
+    stream.seekg(-4, std::istream::cur);
+  } // skyrim has some version data here I don't know how to interpret anyway
+
   m_Data.resize(m_Header.dataSize);
   stream.read(reinterpret_cast<char*>(&m_Data[0]), m_Header.dataSize);
   if (!stream) {

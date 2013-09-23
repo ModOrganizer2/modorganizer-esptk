@@ -45,14 +45,13 @@ void ESP::File::init()
   m_MainRecord = readRecord();
 
   const std::vector<uint8_t> &data = m_MainRecord.data();
-
   membuf buf(reinterpret_cast<const char*>(&data[0]), data.size());
 
   std::istream stream(&buf);
   while (!stream.eof()) {
     SubRecord rec;
-    rec.readFrom(stream);
-    if (rec.type() == SubRecord::TYPE_MAST) {
+    bool success = rec.readFrom(stream);
+    if (success && (rec.type() == SubRecord::TYPE_MAST) && (rec.data().size() > 0)) {
       m_Masters.insert(reinterpret_cast<const char*>(&rec.data()[0]));
     }
   }
