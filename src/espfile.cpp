@@ -36,7 +36,9 @@ void ESP::File::init()
   m_File.exceptions(std::ios_base::badbit);
 
   uint8_t type[4];
-  m_File.read(reinterpret_cast<char*>(type), 4);
+  if (!m_File.read(reinterpret_cast<char*>(type), 4)) {
+    throw ESP::InvalidFileException("file incomplete");
+  }
   if (memcmp(type, "TES4", 4) != 0) {
     throw ESP::InvalidFileException("invalid file type");
   }
