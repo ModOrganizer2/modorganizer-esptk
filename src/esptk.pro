@@ -18,12 +18,4 @@ HEADERS += espfile.h \
     record.h \
     subrecord.h \
     esptypes.h \
-    espexceptions.h
-unix:!symbian {
-    maemo5 {
-        target.path = /opt/usr/lib
-    } else {
-        target.path = /usr/lib
-    }
-    INSTALLS += target
-}
+		espexceptions.h
