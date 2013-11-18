@@ -21,6 +21,7 @@ public:
   Record readRecord();
 
   bool isMaster() const;
+  bool isDummy() const;
   std::set<std::string> masters() const { return m_Masters; }
 
 private:
@@ -30,6 +31,12 @@ private:
 private:
 
   std::ifstream m_File;
+
+  struct {
+    float version;
+    int32_t numRecords;
+    uint32_t nextObjectId;
+  } m_Header;
 
   Record m_MainRecord;
   std::set<std::string> m_Masters;

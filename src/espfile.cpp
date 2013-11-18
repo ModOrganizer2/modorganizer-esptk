@@ -53,8 +53,18 @@ void ESP::File::init()
   while (!stream.eof()) {
     SubRecord rec;
     bool success = rec.readFrom(stream);
-    if (success && (rec.type() == SubRecord::TYPE_MAST) && (rec.data().size() > 0)) {
-      m_Masters.insert(reinterpret_cast<const char*>(&rec.data()[0]));
+    if (success) {
+      if (rec.type() == SubRecord::TYPE_HEDR) {
+        if (rec.data().size() != sizeof(m_Header)) {
+          printf("invalid header size\n");
+          m_Header.version = 0.0f;
+          m_Header.numRecords = 1; // prevent this esp appear like a dummy
+        } else {
+          memcpy(&m_Header, &rec.data()[0], sizeof(m_Header));
+        }
+      } else if ((rec.type() == SubRecord::TYPE_MAST) && (rec.data().size() > 0)) {
+        m_Masters.insert(reinterpret_cast<const char*>(&rec.data()[0]));
+      }
     }
   }
 }
@@ -70,4 +80,9 @@ ESP::Record ESP::File::readRecord()
 bool ESP::File::isMaster() const
 {
   return m_MainRecord.flagSet(Record::FLAG_MASTER);
+}
+
+bool ESP::File::isDummy() const
+{
+  return m_Header.numRecords == 0;
 }
