@@ -54,19 +54,45 @@ void ESP::File::init()
     SubRecord rec;
     bool success = rec.readFrom(stream);
     if (success) {
-      if (rec.type() == SubRecord::TYPE_HEDR) {
-        if (rec.data().size() != sizeof(m_Header)) {
-          printf("invalid header size\n");
-          m_Header.version = 0.0f;
-          m_Header.numRecords = 1; // prevent this esp appear like a dummy
-        } else {
-          memcpy(&m_Header, &rec.data()[0], sizeof(m_Header));
-        }
-      } else if ((rec.type() == SubRecord::TYPE_MAST) && (rec.data().size() > 0)) {
-        m_Masters.insert(reinterpret_cast<const char*>(&rec.data()[0]));
+      switch (rec.type()) {
+        case SubRecord::TYPE_HEDR: onHEDR(rec); break;
+        case SubRecord::TYPE_MAST: onMAST(rec); break;
+        case SubRecord::TYPE_CNAM: onCNAM(rec); break;
+        case SubRecord::TYPE_SNAM: onSNAM(rec); break;
       }
     }
   }
+}
+
+
+void ESP::File::onHEDR(const SubRecord &rec)
+{
+  if (rec.data().size() != sizeof(m_Header)) {
+    printf("invalid header size\n");
+    m_Header.version = 0.0f;
+    m_Header.numRecords = 1; // prevent this esp appear like a dummy
+  } else {
+    memcpy(&m_Header, &rec.data()[0], sizeof(m_Header));
+  }
+}
+
+void ESP::File::onMAST(const SubRecord &rec)
+{
+  if (rec.data().size() > 0)
+    m_Masters.insert(reinterpret_cast<const char*>(&rec.data()[0]));
+
+}
+
+void ESP::File::onCNAM(const SubRecord &rec)
+{
+  if (rec.data().size() > 0)
+    m_Author = reinterpret_cast<const char*>(&rec.data()[0]);
+}
+
+void ESP::File::onSNAM(const SubRecord &rec)
+{
+  if (rec.data().size() > 0)
+    m_Description = reinterpret_cast<const char*>(&rec.data()[0]);
 }
 
 
