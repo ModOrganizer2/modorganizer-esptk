@@ -26,6 +26,8 @@ public:
     TYPE_ONAM
   };
 
+  static const int NUM_TYPES = TYPE_ONAM;
+
 public:
   SubRecord();
 

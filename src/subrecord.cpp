@@ -17,7 +17,11 @@ ESP::SubRecord::SubRecord()
 
 bool ESP::SubRecord::readFrom(std::istream &stream)
 {
-  static std::unordered_map<std::string, EType> s_TypeMap = map_list_of("HEDR", TYPE_HEDR)("CNAM", TYPE_CNAM)("MAST", TYPE_MAST)("ONAM", TYPE_ONAM)("SNAME", TYPE_SNAM);
+  static std::unordered_map<std::string, EType> s_TypeMap = map_list_of("HEDR", TYPE_HEDR)
+                                                                       ("CNAM", TYPE_CNAM)
+                                                                       ("MAST", TYPE_MAST)
+                                                                       ("ONAM", TYPE_ONAM)
+                                                                       ("SNAM", TYPE_SNAM);
 
   char typeString[5];
   if (!stream.read(typeString, 4)) {

@@ -2,6 +2,7 @@
 #include "subrecord.h"
 #include "espexceptions.h"
 #include <sstream>
+#include <bitset>
 
 
 ESP::File::File(const std::string &fileName)
@@ -54,16 +55,17 @@ void ESP::File::init()
     SubRecord rec;
     bool success = rec.readFrom(stream);
     if (success) {
-      switch (rec.type()) {
-        case SubRecord::TYPE_HEDR: onHEDR(rec); break;
-        case SubRecord::TYPE_MAST: onMAST(rec); break;
-        case SubRecord::TYPE_CNAM: onCNAM(rec); break;
-        case SubRecord::TYPE_SNAM: onSNAM(rec); break;
+      if (rec.type() != SubRecord::TYPE_UNKNOWN) {
+        switch (rec.type()) {
+          case SubRecord::TYPE_HEDR: onHEDR(rec); break;
+          case SubRecord::TYPE_MAST: onMAST(rec); break;
+          case SubRecord::TYPE_CNAM: onCNAM(rec); break;
+          case SubRecord::TYPE_SNAM: onSNAM(rec); break;
+        }
       }
     }
   }
 }
-
 
 void ESP::File::onHEDR(const SubRecord &rec)
 {
