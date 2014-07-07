@@ -18,6 +18,6 @@ HEADERS += espfile.h \
     record.h \
     subrecord.h \
     esptypes.h \
-		espexceptions.h
+    espexceptions.h
 
 INCLUDEPATH += "$(BOOSTPATH)"
