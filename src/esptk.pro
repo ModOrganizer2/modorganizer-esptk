@@ -10,6 +10,10 @@ TARGET = esptk
 TEMPLATE = lib
 CONFIG += staticlib
 
+!include(../LocalPaths.pri) {
+  message("paths to required libraries need to be set up in LocalPaths.pri")
+}
+
 SOURCES += espfile.cpp \
     record.cpp \
     subrecord.cpp
@@ -20,4 +24,4 @@ HEADERS += espfile.h \
     esptypes.h \
     espexceptions.h
 
-INCLUDEPATH += "$(BOOSTPATH)"
+INCLUDEPATH += "$${BOOSTPATH}"
