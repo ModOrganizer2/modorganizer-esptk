@@ -3,6 +3,9 @@
 
 
 ESP::Record::Record()
+  : m_Header()
+  , m_Data()
+  , m_OblivionStyle(false)
 {
 
 }

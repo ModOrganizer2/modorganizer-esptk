@@ -11,6 +11,8 @@ using namespace boost::assign;
 
 
 ESP::SubRecord::SubRecord()
+  : m_Type(TYPE_UNKNOWN)
+  , m_Data()
 {
 }
 

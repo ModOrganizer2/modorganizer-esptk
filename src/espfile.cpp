@@ -51,7 +51,7 @@ void ESP::File::init()
   membuf buf(reinterpret_cast<const char*>(&data[0]), data.size());
 
   std::istream stream(&buf);
-  while (!stream.eof()) {
+  while (!stream.eof() && !stream.fail()) {
     SubRecord rec;
     bool success = rec.readFrom(stream);
     if (success) {
