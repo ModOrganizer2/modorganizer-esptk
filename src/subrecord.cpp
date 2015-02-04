@@ -17,7 +17,7 @@ ESP::SubRecord::SubRecord()
 }
 
 
-bool ESP::SubRecord::readFrom(std::istream &stream)
+bool ESP::SubRecord::readFrom(std::istream &stream, uint32_t sizeOverride)
 {
   static std::unordered_map<std::string, EType> s_TypeMap = map_list_of("HEDR", TYPE_HEDR)
                                                                        ("CNAM", TYPE_CNAM)
@@ -30,27 +30,34 @@ bool ESP::SubRecord::readFrom(std::istream &stream)
     if (stream.gcount() == 0) {
       return false;
     } else {
-      throw ESP::InvalidRecordException("sub-record incomplete");
+      throw ESP::InvalidRecordException("sub-record incomplete (unknown type)");
     }
   }
   if (stream.gcount() != 4) {
-    throw ESP::InvalidRecordException("sub-record type incomplete");
+    throw ESP::InvalidRecordException(std::string("sub-record type incomplete (invalid type ") + typeString + ")");
   }
   typeString[4] = '\0'; // not sure if this is required, shouldn't be
   auto iter = s_TypeMap.find(std::string(typeString));
   if (iter != s_TypeMap.end()) {
     m_Type = iter->second;
+  } else if (strncmp(typeString, "XXXX", 4) == 0) {
+    if (readType<uint16_t>(stream) != 4) {
+      throw ESP::InvalidRecordException("XXXX record is supposed to be 4 bytes in size");
+    }
+    return readFrom(stream, readType<uint32_t>(stream));
   } else {
     m_Type = TYPE_UNKNOWN;
   }
 
-  uint16_t dataSize = readType<uint16_t>(stream);
-
+  uint32_t dataSize = readType<uint16_t>(stream);
+  if (sizeOverride != 0UL) {
+    dataSize = sizeOverride;
+  }
   m_Data.resize(dataSize);
 
   stream.read(reinterpret_cast<char*>(&m_Data[0]), dataSize);
   if (!stream) {
-    throw ESP::InvalidRecordException("sub-record incomplete");
+    throw ESP::InvalidRecordException(std::string("sub-record incomplete: ") + typeString);
   }
   return true;
 }

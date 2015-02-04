@@ -31,7 +31,7 @@ public:
 public:
   SubRecord();
 
-  bool readFrom(std::istream &stream);
+  bool readFrom(std::istream &stream, uint32_t sizeOverride = 0UL);
 
   EType type() const { return m_Type; }
   const std::vector<uint8_t> &data() const { return m_Data; }
