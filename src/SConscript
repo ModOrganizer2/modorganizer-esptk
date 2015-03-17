@@ -3,7 +3,7 @@ Import('qt_env')
 env = qt_env.Clone()
 
 env['CPPPATH'] += [
-    '$BOOST_PATH',
+    '${BOOSTPATH}',
 ]
 
 env.StaticLibrary('esptk', env.Glob('*.cpp'))
