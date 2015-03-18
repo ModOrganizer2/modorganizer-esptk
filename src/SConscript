@@ -1,9 +1,9 @@
-Import('qt_env')
+Import('env')
 
-env = qt_env.Clone()
+env = env.Clone()
 
-env['CPPPATH'] += [
-    '${BOOSTPATH}',
-]
+env.AppendUnique(CPPPATH = [
+    '${BOOSTPATH}'
+])
 
 env.StaticLibrary('esptk', env.Glob('*.cpp'))
