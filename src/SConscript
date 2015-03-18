@@ -1,0 +1,9 @@
+Import('env')
+
+env = env.Clone()
+
+env.AppendUnique(CPPPATH = [
+    '${BOOSTPATH}'
+])
+
+env.StaticLibrary('esptk', env.Glob('*.cpp'))
