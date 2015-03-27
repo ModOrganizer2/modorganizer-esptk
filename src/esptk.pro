@@ -25,3 +25,6 @@ HEADERS += espfile.h \
     espexceptions.h
 
 INCLUDEPATH += "$${BOOSTPATH}"
+
+OTHER_FILES +=\
+    SConscript
