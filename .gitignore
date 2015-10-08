@@ -1,1 +1,5 @@
 build
+stderr.log
+stdout.log
+CMakeLists.txt.user
+edit
