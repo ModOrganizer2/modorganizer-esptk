@@ -110,6 +110,11 @@ bool ESP::File::isMaster() const
   return m_MainRecord.flagSet(Record::FLAG_MASTER);
 }
 
+bool ESP::File::isLight() const
+{
+  return m_MainRecord.flagSet(Record::FLAG_LIGHT);
+}
+
 bool ESP::File::isDummy() const
 {
   return m_Header.numRecords == 0;
