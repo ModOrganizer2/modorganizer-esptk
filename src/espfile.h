@@ -22,6 +22,7 @@ public:
   Record readRecord();
 
   bool isMaster() const;
+  bool isLight() const;
   bool isDummy() const;
   std::string author() const { return m_Author; }
   std::string description() const { return m_Description; }
