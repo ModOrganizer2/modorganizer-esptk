@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED (VERSION 2.8.11)
 
 SET(PROJ_AUTHOR Tannin)
 SET(PROJ_ARCH x86)
@@ -10,13 +10,17 @@ endif()
 SET(esptk_SRCS
 	espfile.cpp
     record.cpp
+	tes3record.cpp
     subrecord.cpp
+	tes3subrecord.cpp
   )
 
 SET(esptk_HDRS
     espfile.h
     record.h
+	tes3record.h
     subrecord.h
+	tes3subrecord.h
     esptypes.h
     espexceptions.h
   )

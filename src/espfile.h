@@ -6,6 +6,7 @@
 #include <fstream>
 #include <set>
 #include "record.h"
+#include "tes3record.h"
 
 
 namespace ESP {
@@ -46,6 +47,14 @@ private:
     int32_t numRecords;
     uint32_t nextObjectId;
   } m_Header;
+
+  struct {
+	  float version;
+	  uint32_t unknown;
+	  char author[32];
+	  char description[256];
+	  uint32_t numRecords;
+  } m_TES3Header;
 
   Record m_MainRecord;
 
