@@ -147,7 +147,7 @@ bool ESP::File::isMaster() const
 
 bool ESP::File::isLight() const
 {
-  return m_MainRecord.flagSet(Record::FLAG_LIGHT);
+  return m_MainRecord.flagSet(Record::FLAG_LIGHT) || m_MainRecord.flagSet(Record::FLAG_STARFIELD_LIGHT);
 }
 
 bool ESP::File::isDummy() const
