@@ -145,9 +145,18 @@ bool ESP::File::isMaster() const
   return m_MainRecord.flagSet(Record::FLAG_MASTER);
 }
 
-bool ESP::File::isLight() const
+bool ESP::File::isLight(bool overrideSupport) const
 {
-  return m_MainRecord.flagSet(Record::FLAG_LIGHT) || m_MainRecord.flagSet(Record::FLAG_STARFIELD_LIGHT);
+	if (overrideSupport) {
+		return m_MainRecord.flagSet(Record::FLAG_LIGHT_ALTERNATE);
+	} else {
+		return m_MainRecord.flagSet(Record::FLAG_LIGHT);
+	}
+}
+
+bool ESP::File::isOverride() const
+{
+	return m_MainRecord.flagSet(Record::FLAG_OVERRIDE);
 }
 
 bool ESP::File::isDummy() const
