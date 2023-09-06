@@ -1,34 +1,32 @@
 #include "espfile.h"
+#include "espexceptions.h"
 #include "subrecord.h"
 #include "tes3subrecord.h"
-#include "espexceptions.h"
-#include <sstream>
 #include <bitset>
+#include <sstream>
 
-
-ESP::File::File(const std::string &fileName)
+ESP::File::File(const std::string& fileName)
 {
   m_File.open(fileName, std::fstream::in | std::fstream::binary);
   init();
 }
 
-ESP::File::File(const std::wstring &fileName)
+ESP::File::File(const std::wstring& fileName)
 {
   m_File.open(fileName, std::fstream::in | std::fstream::binary);
   init();
 }
-
 
 class membuf : public std::basic_streambuf<char>
 {
 public:
-  membuf(const char *start, size_t size) {
+  membuf(const char* start, size_t size)
+  {
     // baad me! this is intended for an istream only so we're not modifying
-    char *startMod = const_cast<char*>(start);
+    char* startMod = const_cast<char*>(start);
     setg(startMod, startMod, startMod + size);
   }
 };
-
 
 void ESP::File::init()
 {
@@ -42,96 +40,101 @@ void ESP::File::init()
     throw ESP::InvalidFileException("file incomplete");
   }
   if (memcmp(type, "TES3", 4) == 0) {
-	  ESP::TES3Record rec;
-	  rec.readFrom(m_File);
+    ESP::TES3Record rec;
+    rec.readFrom(m_File);
 
-	  while (!m_File.eof() && !m_File.fail()) {
-		  ESP::TES3SubRecord subRec;
-		  bool success = subRec.readFrom(m_File);
-		  int headerSize = sizeof(m_TES3Header);
-		  if (success) {
-			  if (subRec.type() != TES3SubRecord::TYPE_UNKNOWN) {
-				  switch (subRec.type()) {
-				  case TES3SubRecord::TYPE_HEDR:
-					  if (subRec.data().size() != sizeof(m_TES3Header)) {
-						  printf("invalid header size\n");
-						  m_Header.version = 0.0f;
-						  m_Header.numRecords = 1; // prevent this esp appear like a dummy
-					  }
-					  else {
-						  memcpy(&m_TES3Header, &subRec.data()[0], sizeof(m_TES3Header));
-					  }
-					  m_Header.version = m_TES3Header.version;
-					  //m_Header.numRecords = m_TES3Header.numRecords;
-					  m_Author = reinterpret_cast<const char*>(m_TES3Header.author);
-					  m_Description = reinterpret_cast<const char*>(m_TES3Header.description);
-					  break;
-				  case TES3SubRecord::TYPE_MAST:
-					  if (subRec.data().size() > 0)
-						  m_Masters.insert(reinterpret_cast<const char*>(&subRec.data()[0]));
-					  break;
-				  }
-			  }
-		  }
-	  }
+    while (!m_File.eof() && !m_File.fail()) {
+      ESP::TES3SubRecord subRec;
+      bool success   = subRec.readFrom(m_File);
+      int headerSize = sizeof(m_TES3Header);
+      if (success) {
+        if (subRec.type() != TES3SubRecord::TYPE_UNKNOWN) {
+          switch (subRec.type()) {
+          case TES3SubRecord::TYPE_HEDR:
+            if (subRec.data().size() != sizeof(m_TES3Header)) {
+              printf("invalid header size\n");
+              m_Header.version    = 0.0f;
+              m_Header.numRecords = 1;  // prevent this esp appear like a dummy
+            } else {
+              memcpy(&m_TES3Header, &subRec.data()[0], sizeof(m_TES3Header));
+            }
+            m_Header.version = m_TES3Header.version;
+            // m_Header.numRecords = m_TES3Header.numRecords;
+            m_Author      = reinterpret_cast<const char*>(m_TES3Header.author);
+            m_Description = reinterpret_cast<const char*>(m_TES3Header.description);
+            break;
+          case TES3SubRecord::TYPE_MAST:
+            if (subRec.data().size() > 0)
+              m_Masters.insert(reinterpret_cast<const char*>(&subRec.data()[0]));
+            break;
+          }
+        }
+      }
+    }
   } else if (memcmp(type, "TES4", 4) == 0) {
-	  m_File.seekg(0);
+    m_File.seekg(0);
 
-	  m_MainRecord = readRecord();
+    m_MainRecord = readRecord();
 
-	  const std::vector<uint8_t> &data = m_MainRecord.data();
-	  membuf buf(reinterpret_cast<const char*>(&data[0]), data.size());
+    const std::vector<uint8_t>& data = m_MainRecord.data();
+    membuf buf(reinterpret_cast<const char*>(&data[0]), data.size());
 
-	  std::istream stream(&buf);
-	  while (!stream.eof() && !stream.fail()) {
-		  SubRecord rec;
-		  bool success = rec.readFrom(stream);
-		  if (success) {
-			  if (rec.type() != SubRecord::TYPE_UNKNOWN) {
-				  switch (rec.type()) {
-				  case SubRecord::TYPE_HEDR: onHEDR(rec); break;
-				  case SubRecord::TYPE_MAST: onMAST(rec); break;
-				  case SubRecord::TYPE_CNAM: onCNAM(rec); break;
-				  case SubRecord::TYPE_SNAM: onSNAM(rec); break;
-				  }
-			  }
-		  }
-	  }
+    std::istream stream(&buf);
+    while (!stream.eof() && !stream.fail()) {
+      SubRecord rec;
+      bool success = rec.readFrom(stream);
+      if (success) {
+        if (rec.type() != SubRecord::TYPE_UNKNOWN) {
+          switch (rec.type()) {
+          case SubRecord::TYPE_HEDR:
+            onHEDR(rec);
+            break;
+          case SubRecord::TYPE_MAST:
+            onMAST(rec);
+            break;
+          case SubRecord::TYPE_CNAM:
+            onCNAM(rec);
+            break;
+          case SubRecord::TYPE_SNAM:
+            onSNAM(rec);
+            break;
+          }
+        }
+      }
+    }
   } else {
-	  throw ESP::InvalidFileException("invalid file type");
+    throw ESP::InvalidFileException("invalid file type");
   }
 }
 
-void ESP::File::onHEDR(const SubRecord &rec)
+void ESP::File::onHEDR(const SubRecord& rec)
 {
   if (rec.data().size() != sizeof(m_Header)) {
     printf("invalid header size\n");
-    m_Header.version = 0.0f;
-    m_Header.numRecords = 1; // prevent this esp appear like a dummy
+    m_Header.version    = 0.0f;
+    m_Header.numRecords = 1;  // prevent this esp appear like a dummy
   } else {
     memcpy(&m_Header, &rec.data()[0], sizeof(m_Header));
   }
 }
 
-void ESP::File::onMAST(const SubRecord &rec)
+void ESP::File::onMAST(const SubRecord& rec)
 {
   if (rec.data().size() > 0)
     m_Masters.insert(reinterpret_cast<const char*>(&rec.data()[0]));
-
 }
 
-void ESP::File::onCNAM(const SubRecord &rec)
+void ESP::File::onCNAM(const SubRecord& rec)
 {
   if (rec.data().size() > 0)
     m_Author = reinterpret_cast<const char*>(&rec.data()[0]);
 }
 
-void ESP::File::onSNAM(const SubRecord &rec)
+void ESP::File::onSNAM(const SubRecord& rec)
 {
   if (rec.data().size() > 0)
     m_Description = reinterpret_cast<const char*>(&rec.data()[0]);
 }
-
 
 ESP::Record ESP::File::readRecord()
 {
@@ -147,16 +150,16 @@ bool ESP::File::isMaster() const
 
 bool ESP::File::isLight(bool overrideSupport) const
 {
-	if (overrideSupport) {
-		return m_MainRecord.flagSet(Record::FLAG_LIGHT_ALTERNATE);
-	} else {
-		return m_MainRecord.flagSet(Record::FLAG_LIGHT);
-	}
+  if (overrideSupport) {
+    return m_MainRecord.flagSet(Record::FLAG_LIGHT_ALTERNATE);
+  } else {
+    return m_MainRecord.flagSet(Record::FLAG_LIGHT);
+  }
 }
 
 bool ESP::File::isOverride() const
 {
-	return m_MainRecord.flagSet(Record::FLAG_OVERRIDE);
+  return m_MainRecord.flagSet(Record::FLAG_OVERRIDE);
 }
 
 bool ESP::File::isDummy() const

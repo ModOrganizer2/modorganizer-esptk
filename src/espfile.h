@@ -1,24 +1,22 @@
 #ifndef ESPFILE_H
 #define ESPFILE_H
 
-
-#include <string>
-#include <fstream>
-#include <set>
 #include "record.h"
 #include "tes3record.h"
+#include <fstream>
+#include <set>
+#include <string>
 
-
-namespace ESP {
+namespace ESP
+{
 
 class SubRecord;
 
 class File
 {
 public:
-
-  File(const std::string &fileName);
-  File(const std::wstring &fileName);
+  File(const std::string& fileName);
+  File(const std::wstring& fileName);
 
   Record readRecord();
 
@@ -31,30 +29,30 @@ public:
   std::set<std::string> masters() const { return m_Masters; }
 
 private:
-
   void init();
 
-  void onHEDR(const SubRecord &rec);
-  void onMAST(const SubRecord &rec);
-  void onCNAM(const SubRecord &rec);
-  void onSNAM(const SubRecord &rec);
+  void onHEDR(const SubRecord& rec);
+  void onMAST(const SubRecord& rec);
+  void onCNAM(const SubRecord& rec);
+  void onSNAM(const SubRecord& rec);
 
 private:
-
   std::ifstream m_File;
 
-  struct {
+  struct
+  {
     float version;
     int32_t numRecords;
     uint32_t nextObjectId;
   } m_Header;
 
-  struct {
-	  float version;
-	  uint32_t unknown;
-	  char author[32];
-	  char description[256];
-	  uint32_t numRecords;
+  struct
+  {
+    float version;
+    uint32_t unknown;
+    char author[32];
+    char description[256];
+    uint32_t numRecords;
   } m_TES3Header;
 
   Record m_MainRecord;
@@ -63,9 +61,8 @@ private:
   std::string m_Description;
 
   std::set<std::string> m_Masters;
-
 };
 
-}
+}  // namespace ESP
 
-#endif // ESPFILE_H
+#endif  // ESPFILE_H

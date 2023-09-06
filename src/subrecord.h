@@ -1,14 +1,12 @@
 #ifndef SUBRECORD_H
 #define SUBRECORD_H
 
-
 #include <cstdint>
 #include <istream>
 #include <vector>
 
-
-namespace ESP {
-
+namespace ESP
+{
 
 /**
  * @brief sub-record storage class without record-specific information
@@ -16,8 +14,8 @@ namespace ESP {
 class SubRecord
 {
 public:
-
-  enum EType {
+  enum EType
+  {
     TYPE_UNKNOWN,
     TYPE_HEDR,
     TYPE_CNAM,
@@ -31,17 +29,16 @@ public:
 public:
   SubRecord();
 
-  bool readFrom(std::istream &stream, uint32_t sizeOverride = 0UL);
+  bool readFrom(std::istream& stream, uint32_t sizeOverride = 0UL);
 
   EType type() const { return m_Type; }
-  const std::vector<uint8_t> &data() const { return m_Data; }
+  const std::vector<uint8_t>& data() const { return m_Data; }
 
 private:
-
   EType m_Type;
   std::vector<uint8_t> m_Data;
 };
 
-}
+}  // namespace ESP
 
-#endif // SUBRECORD_H
+#endif  // SUBRECORD_H
