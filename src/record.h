@@ -2,11 +2,11 @@
 #define RECORD_H
 
 #include <cstdint>
-#include <vector>
 #include <istream>
+#include <vector>
 
-
-namespace ESP {
+namespace ESP
+{
 
 /**
  * @brief record storage class without record-specific information
@@ -14,23 +14,28 @@ namespace ESP {
 class Record
 {
 public:
-  enum EFlag {
-    FLAG_MASTER = 0x00000001,
-    FLAG_LIGHT = 0x00000200,
+  enum EFlag
+  {
+    FLAG_MASTER          = 0x00000001,
+    FLAG_LIGHT_ALTERNATE = 0x00000100,  // SF light flag (FE/FF memory space)
+    FLAG_LIGHT           = 0x00000200,  // SSE & FO4 light flag (FE/FF memory space)
+    FLAG_OVERRIDE = 0x00000200,  // SF override flag (does not claim new memory space,
+                                 // overrules light flag)
     FLAG_COMPRESSED = 0x00040000
   };
 
 public:
   Record();
 
-  bool readFrom(std::istream &stream);
+  bool readFrom(std::istream& stream);
 
   bool flagSet(EFlag flag) const;
 
-  const std::vector<uint8_t> &data() const { return m_Data; }
+  const std::vector<uint8_t>& data() const { return m_Data; }
 
 private:
-  struct Header {
+  struct Header
+  {
     char type[4];
     uint32_t dataSize;
     uint32_t flags;
@@ -41,9 +46,8 @@ private:
   std::vector<uint8_t> m_Data;
 
   bool m_OblivionStyle;
-
 };
 
-}
+}  // namespace ESP
 
-#endif // RECORD_H
+#endif  // RECORD_H

@@ -1,13 +1,13 @@
 #ifndef ESPTYPES_H
 #define ESPTYPES_H
 
-
 #include <istream>
 
-
-template <typename T> static T readType(std::istream &stream)
+template <typename T>
+static T readType(std::istream& stream)
 {
-  union {
+  union
+  {
     char buffer[sizeof(T)];
     T value;
   };
@@ -16,4 +16,4 @@ template <typename T> static T readType(std::istream &stream)
   return value;
 }
 
-#endif // ESPTYPES_H
+#endif  // ESPTYPES_H
