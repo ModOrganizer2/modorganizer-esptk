@@ -21,8 +21,8 @@ public:
   Record readRecord();
 
   bool isMaster() const;
-  bool isLight(bool overrideSupport = false) const;
-  bool isOverride() const;
+  bool isLight(bool overlaySupport = false) const;
+  bool isOverlay() const;
   bool isDummy() const;
   std::string author() const { return m_Author; }
   std::string description() const { return m_Description; }
