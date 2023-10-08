@@ -19,8 +19,8 @@ public:
     FLAG_MASTER          = 0x00000001,
     FLAG_LIGHT_ALTERNATE = 0x00000100,  // SF light flag (FE/FF memory space)
     FLAG_LIGHT           = 0x00000200,  // SSE & FO4 light flag (FE/FF memory space)
-    FLAG_OVERRIDE = 0x00000200,  // SF override flag (does not claim new memory space,
-                                 // overrules light flag)
+    FLAG_OVERLAY = 0x00000200,  // SF overlay flag (does not claim new memory space,
+                                // overrules light flag)
     FLAG_COMPRESSED = 0x00040000
   };
 
