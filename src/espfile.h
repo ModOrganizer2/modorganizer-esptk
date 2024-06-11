@@ -22,6 +22,7 @@ public:
 
   bool isMaster() const;
   bool isLight(bool overlaySupport = false) const;
+  bool isMedium() const;
   bool isOverlay() const;
   bool isDummy() const;
   std::string author() const { return m_Author; }
