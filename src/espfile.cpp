@@ -157,6 +157,11 @@ bool ESP::File::isLight(bool overlaySupport) const
   }
 }
 
+bool ESP::File::isMedium() const
+{
+  return m_MainRecord.flagSet(Record::FLAG_MEDIUM);
+}
+
 bool ESP::File::isOverlay() const
 {
   return m_MainRecord.flagSet(Record::FLAG_OVERLAY);

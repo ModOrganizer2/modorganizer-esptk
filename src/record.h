@@ -21,6 +21,8 @@ public:
     FLAG_LIGHT           = 0x00000200,  // SSE & FO4 light flag (FE/FF memory space)
     FLAG_OVERLAY = 0x00000200,  // SF overlay flag (does not claim new memory space,
                                 // overrules light flag)
+    FLAG_MEDIUM = 0x00000400,   // SF Creation update, indicates medium plugin type (FD
+                                // memory space)
     FLAG_COMPRESSED = 0x00040000
   };
 
