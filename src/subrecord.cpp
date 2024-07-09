@@ -9,10 +9,11 @@ ESP::SubRecord::SubRecord() : m_Type(TYPE_UNKNOWN), m_Data() {}
 
 bool ESP::SubRecord::readFrom(std::istream& stream, uint32_t sizeOverride)
 {
-  static std::unordered_map<std::string, EType> s_TypeMap{
-    {"HEDR", TYPE_HEDR}, {"CNAM", TYPE_CNAM}, {"MAST", TYPE_MAST},
-    {"ONAM", TYPE_ONAM}, {"SNAM", TYPE_SNAM}
-  };
+  static std::unordered_map<std::string, EType> s_TypeMap{{"HEDR", TYPE_HEDR},
+                                                          {"CNAM", TYPE_CNAM},
+                                                          {"MAST", TYPE_MAST},
+                                                          {"ONAM", TYPE_ONAM},
+                                                          {"SNAM", TYPE_SNAM}};
 
   char typeString[5];
   if (!stream.read(typeString, 4)) {
