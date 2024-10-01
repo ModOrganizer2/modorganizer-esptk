@@ -167,6 +167,11 @@ bool ESP::File::isOverlay() const
   return m_MainRecord.flagSet(Record::FLAG_OVERLAY);
 }
 
+bool ESP::File::isBlueprint() const
+{
+  return m_MainRecord.flagSet(Record::FLAG_BLUEPRINT);
+}
+
 bool ESP::File::isDummy() const
 {
   return m_Header.numRecords == 0;
