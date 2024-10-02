@@ -23,6 +23,8 @@ public:
                                 // overrules light flag)
     FLAG_MEDIUM = 0x00000400,   // SF Creation update, indicates medium plugin type (FD
                                 // memory space)
+    FLAG_BLUEPRINT =
+        0x0000800,  // SF blueprint flag (force loads after all other plugins)
     FLAG_COMPRESSED = 0x00040000
   };
 

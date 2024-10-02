@@ -24,6 +24,7 @@ public:
   bool isLight(bool overlaySupport = false) const;
   bool isMedium() const;
   bool isOverlay() const;
+  bool isBlueprint() const;
   bool isDummy() const;
   std::string author() const { return m_Author; }
   std::string description() const { return m_Description; }
