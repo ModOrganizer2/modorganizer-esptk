@@ -26,6 +26,7 @@ public:
   bool isOverlay() const;
   bool isBlueprint() const;
   bool isDummy() const;
+  uint16_t formVersion() const { return m_MainRecord.formVersion(); };
   std::string author() const { return m_Author; }
   std::string description() const { return m_Description; }
   std::set<std::string> masters() const { return m_Masters; }

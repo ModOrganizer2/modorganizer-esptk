@@ -1,7 +1,7 @@
 #include "record.h"
 #include "espexceptions.h"
 
-ESP::Record::Record() : m_Header(), m_Data(), m_OblivionStyle(false) {}
+ESP::Record::Record() : m_Header(), m_FormVersion(), m_Data(), m_OblivionStyle(false) {}
 
 bool ESP::Record::flagSet(ESP::Record::EFlag flag) const
 {
@@ -23,7 +23,10 @@ bool ESP::Record::readFrom(std::istream& stream)
   if (memcmp(buf, "HEDR", 4) == 0) {
     m_OblivionStyle = true;
     stream.seekg(-4, std::istream::cur);
-  }  // skyrim has some version data here I don't know how to interpret anyway
+    // Oblivion-style plugins don't have a form version
+  } else {
+    memcpy(&m_FormVersion, buf, sizeof(uint16_t));
+  }
 
   m_Data.resize(m_Header.dataSize);
   stream.read(reinterpret_cast<char*>(&m_Data[0]), m_Header.dataSize);
