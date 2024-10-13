@@ -1,19 +1,16 @@
 #include "tes3subrecord.h"
 #include "espexceptions.h"
 #include "esptypes.h"
-#include <boost/assign.hpp>
 #include <cstdint>
 #include <string>
 #include <unordered_map>
-
-using namespace boost::assign;
 
 ESP::TES3SubRecord::TES3SubRecord() : m_Type(TYPE_UNKNOWN), m_Data() {}
 
 bool ESP::TES3SubRecord::readFrom(std::istream& stream, uint32_t sizeOverride)
 {
-  static std::unordered_map<std::string, EType> s_TypeMap =
-      map_list_of("HEDR", TYPE_HEDR)("MAST", TYPE_MAST)("DATA", TYPE_DATA);
+  static std::unordered_map<std::string, EType> s_TypeMap = {
+      {"HEDR", TYPE_HEDR}, {"MAST", TYPE_MAST}, {"DATA", TYPE_DATA}};
 
   char typeString[5];
   if (!stream.read(typeString, 4)) {
