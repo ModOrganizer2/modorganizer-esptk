@@ -35,6 +35,8 @@ public:
 
   bool flagSet(EFlag flag) const;
 
+  uint16_t formVersion() const { return m_FormVersion; }
+
   const std::vector<uint8_t>& data() const { return m_Data; }
 
 private:
@@ -47,6 +49,7 @@ private:
     uint32_t revision;
   } m_Header;
 
+  uint16_t m_FormVersion;
   std::vector<uint8_t> m_Data;
 
   bool m_OblivionStyle;
