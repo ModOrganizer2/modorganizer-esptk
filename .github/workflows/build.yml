@@ -2,7 +2,7 @@ name: Build ESPTK
 
 on:
   push:
-    branches: master
+    branches: [master]
   pull_request:
     types: [opened, synchronize, reopened]
 
