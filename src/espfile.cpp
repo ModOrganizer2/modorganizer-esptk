@@ -58,9 +58,9 @@ void ESP::File::init()
             } else {
               memcpy(&m_TES3Header, &subRec.data()[0], sizeof(m_TES3Header));
             }
-            m_Header.version = m_TES3Header.version;
+            m_Header.version    = m_TES3Header.version;
             m_Header.numRecords = m_TES3Header.numRecords;
-            m_Author      = reinterpret_cast<const char*>(m_TES3Header.author);
+            m_Author            = reinterpret_cast<const char*>(m_TES3Header.author);
             m_Description = reinterpret_cast<const char*>(m_TES3Header.description);
             break;
           case TES3SubRecord::TYPE_MAST:
